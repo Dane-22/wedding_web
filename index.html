@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wedding Invitation</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      (function () {
+        try {
+          var isFile = location && location.protocol === 'file:';
+          if (isFile) return;
+          var stored = localStorage.getItem('theme');
+          var theme = stored ? stored : 'light';
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+        } catch (e) {}
+      })();
+    </script>
+
+    <script>
+      tailwind = {
+        config: {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              fontFamily: {
+                serif: ['Playfair Display', 'ui-serif', 'Georgia'],
+                sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --paper: #f9f9f9;
+        --ink: #1a1a1a;
+        --gold: #b89b5e;
+        --hairline: rgba(26, 26, 26, 0.12);
+        --card: rgba(255, 255, 255, 0.65);
+        --blur: saturate(140%) blur(14px);
+      }
+      .dark {
+        --paper: #0a0a0a;
+        --ink: #e5e5e5;
+        --gold: #9a8452;
+        --hairline: rgba(229, 229, 229, 0.14);
+        --card: rgba(10, 10, 10, 0.55);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--paper);
+        color: var(--ink);
+      }
+
+      main {
+        position: relative;
+        z-index: 10;
+      }
+
+      .hairline {
+        border-color: var(--hairline);
+      }
+
+      .nav-solid {
+        background: rgba(249, 249, 249, 0.7);
+        backdrop-filter: var(--blur);
+        -webkit-backdrop-filter: var(--blur);
+        border-bottom: 1px solid var(--hairline);
+      }
+      .dark .nav-solid {
+        background: rgba(10, 10, 10, 0.55);
+      }
+
+      .cursor {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 18px;
+        height: 18px;
+        border-radius: 9999px;
+        border: 1px solid var(--ink);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        opacity: 0;
+      }
+      .cursor.is-active {
+        opacity: 1;
+      }
+      .cursor.is-hover {
+        width: 44px;
+        height: 44px;
+        border-width: 1px;
+      }
+
+      .masonry {
+        column-count: 1;
+        column-gap: 1rem;
+      }
+      @media (min-width: 640px) {
+        .masonry {
+          column-count: 2;
+          column-gap: 1.25rem;
+        }
+      }
+      @media (min-width: 1024px) {
+        .masonry {
+          column-count: 3;
+          column-gap: 1.5rem;
+        }
+      }
+      .masonry-item {
+        break-inside: avoid;
+        margin-bottom: 1rem;
+      }
+
+      .falling-elements {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 350ms ease;
+        color: var(--gold);
+        overflow: hidden;
+      }
+      .falling-elements.is-visible {
+        opacity: 1;
+      }
+      .falling-icon {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        opacity: 0.12;
+        will-change: transform;
+        top: -40px;
+      }
+      .falling-icon svg {
+        width: 100%;
+        height: 100%;
+        stroke-width: 1.25;
+        filter: drop-shadow(0 1px 1px rgba(0,0,0,0.08));
+      }
+      .dark .falling-icon {
+        opacity: 0.1;
+      }
+      .dark .falling-icon svg {
+        filter: drop-shadow(0 1px 1px rgba(255,255,255,0.05));
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .cursor {
+          display: none;
+        }
+      }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
+  </head>
+  <body class="h-full font-sans antialiased">
+    <div class="cursor" id="cursor"></div>
+
+    <header class="fixed inset-x-0 top-0 z-50">
+      <nav
+        id="nav"
+        class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 transition-all duration-300 sm:px-6"
+        aria-label="Primary"
+      >
+        <a href="#home" class="group inline-flex items-baseline gap-2 interactive">
+          <span class="font-serif text-lg tracking-tight sm:text-xl">Wedding</span>
+          <span class="text-xs uppercase tracking-[0.25em]" style="color: var(--gold)">Invite</span>
+        </a>
+
+        <div class="hidden items-center gap-6 text-sm sm:flex">
+          <a class="interactive hover:opacity-70 transition" href="#home">Home</a>
+          <a class="interactive hover:opacity-70 transition" href="#about">About</a>
+          <a class="interactive hover:opacity-70 transition" href="#story">Story</a>
+          <a class="interactive hover:opacity-70 transition" href="#venue">Venue</a>
+          <a class="interactive hover:opacity-70 transition" href="#program">Program</a>
+          <a class="interactive hover:opacity-70 transition" href="#gallery">Gallery</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            id="themeToggle"
+            type="button"
+            class="interactive inline-flex items-center gap-2 rounded-full border px-3 py-2 text-xs uppercase tracking-[0.25em] transition hover:opacity-80"
+            style="border-color: var(--hairline)"
+            aria-label="Toggle theme"
+          >
+            <span id="themeLabel">Light</span>
+            <span class="inline-block h-2 w-2 rounded-full" style="background: var(--gold)"></span>
+          </button>
+
+          <button
+            id="mobileMenuBtn"
+            type="button"
+            class="interactive inline-flex items-center justify-center rounded-full border px-3 py-2 text-xs uppercase tracking-[0.25em] transition hover:opacity-80 sm:hidden"
+            style="border-color: var(--hairline)"
+            aria-controls="mobileMenu"
+            aria-expanded="false"
+          >
+            Menu
+          </button>
+        </div>
+      </nav>
+
+      <div id="mobileMenu" class="hidden sm:hidden">
+        <div class="mx-auto max-w-6xl px-4 pb-4 sm:px-6">
+          <div class="rounded-2xl border p-4" style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)">
+            <div class="grid gap-3 text-sm">
+              <a class="interactive hover:opacity-70 transition" href="#home">Home</a>
+              <a class="interactive hover:opacity-70 transition" href="#about">About</a>
+              <a class="interactive hover:opacity-70 transition" href="#story">Story</a>
+              <a class="interactive hover:opacity-70 transition" href="#venue">Venue</a>
+              <a class="interactive hover:opacity-70 transition" href="#program">Program</a>
+              <a class="interactive hover:opacity-70 transition" href="#gallery">Gallery</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="pt-24">
+      <section id="home" class="section mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-24">
+        <div class="grid items-end gap-10 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-7">
+            <div class="inline-flex items-center gap-3 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.25em]" style="border-color: var(--hairline)">
+              <span class="inline-block h-2 w-2 rounded-full" style="background: var(--gold)"></span>
+              <span>Save the Date</span>
+            </div>
+
+            <h1
+              id="heroNames"
+              class="mt-6 font-serif text-5xl leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl"
+            >
+              Mariane Joy &amp; Renic
+            </h1>
+
+            <p class="mt-6 max-w-xl text-base leading-relaxed opacity-80">
+              An editorial, lore-obsessed celebration of two lives colliding.
+              Join us for a night of vows, music, and a little bit of myth.
+            </p>
+
+            <div class="mt-8 grid gap-4 sm:grid-cols-2">
+              <div class="rounded-2xl border p-5" style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)">
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">Date</div>
+                <div id="heroDate" class="mt-2 font-serif text-2xl">December 14, 2026</div>
+                <div class="mt-1 text-sm opacity-70">3:30 PM</div>
+              </div>
+              <div class="rounded-2xl border p-5" style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)">
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">Countdown</div>
+                <div class="mt-3 grid grid-cols-4 gap-2 text-center">
+                  <div class="rounded-xl border px-2 py-3" style="border-color: var(--hairline)">
+                    <div id="cdDays" class="font-serif text-2xl">--</div>
+                    <div class="mt-1 text-[10px] uppercase tracking-[0.25em] opacity-70">Days</div>
+                  </div>
+                  <div class="rounded-xl border px-2 py-3" style="border-color: var(--hairline)">
+                    <div id="cdHours" class="font-serif text-2xl">--</div>
+                    <div class="mt-1 text-[10px] uppercase tracking-[0.25em] opacity-70">Hours</div>
+                  </div>
+                  <div class="rounded-xl border px-2 py-3" style="border-color: var(--hairline)">
+                    <div id="cdMins" class="font-serif text-2xl">--</div>
+                    <div class="mt-1 text-[10px] uppercase tracking-[0.25em] opacity-70">Mins</div>
+                  </div>
+                  <div class="rounded-xl border px-2 py-3" style="border-color: var(--hairline)">
+                    <div id="cdSecs" class="font-serif text-2xl">--</div>
+                    <div class="mt-1 text-[10px] uppercase tracking-[0.25em] opacity-70">Secs</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="#venue"
+                class="interactive inline-flex items-center justify-center rounded-full px-5 py-3 text-xs uppercase tracking-[0.25em] transition hover:opacity-90"
+                style="background: var(--ink); color: var(--paper)"
+              >
+                View Venue
+              </a>
+              <a
+                href="#gallery"
+                class="interactive inline-flex items-center justify-center rounded-full border px-5 py-3 text-xs uppercase tracking-[0.25em] transition hover:opacity-80"
+                style="border-color: var(--hairline)"
+              >
+                Preview Gallery
+              </a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5">
+            <div class="rounded-3xl border p-6" style="border-color: var(--hairline)">
+              <div class="flex items-baseline justify-between">
+                <h2 class="font-serif text-2xl">Dress Code</h2>
+                <span class="text-xs uppercase tracking-[0.25em]" style="color: var(--gold)">Editorial</span>
+              </div>
+              <p class="mt-3 text-sm leading-relaxed opacity-80">
+                Think clean silhouettes, monochrome tones, and one subtle statement.
+              </p>
+              <div class="mt-5 grid gap-3">
+                <div class="rounded-2xl border p-4" style="border-color: var(--hairline); background: var(--card)">
+                  <div class="text-xs uppercase tracking-[0.25em] opacity-70">Palette</div>
+                  <div class="mt-2 text-sm">Black / White / Muted Gold</div>
+                </div>
+                <div class="rounded-2xl border p-4" style="border-color: var(--hairline); background: var(--card)">
+                  <div class="text-xs uppercase tracking-[0.25em] opacity-70">Note</div>
+                  <div class="mt-2 text-sm">Please arrive 15 minutes early for seating.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-4">
+              <div class="rounded-2xl border p-4" style="border-color: var(--hairline)">
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">Location</div>
+                <div class="mt-2 font-serif text-lg">The Atrium</div>
+              </div>
+              <div class="rounded-2xl border p-4" style="border-color: var(--hairline)">
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">City</div>
+                <div class="mt-2 font-serif text-lg">Your City</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-5">
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">About</h2>
+            <p class="mt-4 text-sm uppercase tracking-[0.25em] opacity-70">Lore, but make it real</p>
+          </div>
+          <div class="lg:col-span-7">
+            <div class="grid gap-6">
+              <p class="text-base leading-relaxed opacity-85">
+                This page is your editorial invitation: the who, the where, the why.
+                Minimal on purpose. Bold where it matters.
+              </p>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div class="rounded-2xl border p-5" style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)">
+                  <div class="text-xs uppercase tracking-[0.25em] opacity-70">The Couple</div>
+                  <div class="mt-3 font-serif text-2xl">Mariane Joy &amp; Renic</div>
+                  <p class="mt-2 text-sm leading-relaxed opacity-80">
+                    Two storylines, one chapter.
+                  </p>
+                </div>
+                <div class="rounded-2xl border p-5" style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)">
+                  <div class="text-xs uppercase tracking-[0.25em] opacity-70">The Vibe</div>
+                  <div class="mt-3 font-serif text-2xl">High-Fashion</div>
+                  <p class="mt-2 text-sm leading-relaxed opacity-80">
+                    Clean typography, generous whitespace, and a hint of gold.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="story" class="section mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-5">
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">Story</h2>
+            <p class="mt-4 text-sm uppercase tracking-[0.25em] opacity-70">A timeline of becoming</p>
+          </div>
+          <div class="lg:col-span-7">
+            <div class="border-l pl-6" style="border-color: var(--hairline)">
+              <div class="timeline-item relative pb-10">
+                <div class="absolute -left-[9px] top-1 h-4 w-4 rounded-full" style="background: var(--gold)"></div>
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">2019</div>
+                <div class="mt-2 font-serif text-2xl">A chance introduction</div>
+                <p class="mt-2 text-sm leading-relaxed opacity-80">A small moment that changed the entire plot.</p>
+              </div>
+              <div class="timeline-item relative pb-10">
+                <div class="absolute -left-[9px] top-1 h-4 w-4 rounded-full" style="background: var(--gold)"></div>
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">2021</div>
+                <div class="mt-2 font-serif text-2xl">The steady build</div>
+                <p class="mt-2 text-sm leading-relaxed opacity-80">Coffee runs, late-night talks, and the quiet certainty.</p>
+              </div>
+              <div class="timeline-item relative pb-10">
+                <div class="absolute -left-[9px] top-1 h-4 w-4 rounded-full" style="background: var(--gold)"></div>
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">2024</div>
+                <div class="mt-2 font-serif text-2xl">The question</div>
+                <p class="mt-2 text-sm leading-relaxed opacity-80">A yes that felt like coming home.</p>
+              </div>
+              <div class="timeline-item relative">
+                <div class="absolute -left-[9px] top-1 h-4 w-4 rounded-full" style="background: var(--gold)"></div>
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">2026</div>
+                <div class="mt-2 font-serif text-2xl">The celebration</div>
+                <p class="mt-2 text-sm leading-relaxed opacity-80">One room, one night, one story told together.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="venue" class="section mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div class="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">Venue</h2>
+            <p class="mt-4 text-sm uppercase tracking-[0.25em] opacity-70">Where the scene unfolds</p>
+          </div>
+          <div class="max-w-xl text-sm leading-relaxed opacity-80">
+            Replace this with your venue details and any travel notes.
+          </div>
+        </div>
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-3">
+          <article
+            class="group rounded-3xl border p-6 transition"
+            style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <h3 class="font-serif text-2xl">The Atrium</h3>
+              <span class="text-xs uppercase tracking-[0.25em]" style="color: var(--gold)">Main</span>
+            </div>
+            <p class="mt-3 text-sm leading-relaxed opacity-80">123 Example Street, Your City</p>
+            <div class="mt-6 overflow-hidden rounded-2xl border" style="border-color: var(--hairline)">
+              <div class="h-28 bg-gradient-to-br from-black/5 to-black/0 dark:from-white/10 dark:to-white/0"></div>
+            </div>
+            <div class="mt-4 max-h-0 overflow-hidden text-sm leading-relaxed opacity-80 transition-all duration-300 group-hover:max-h-40">
+              Parking is available onsite. Please follow event signage upon arrival.
+            </div>
+          </article>
+
+          <article
+            class="group rounded-3xl border p-6 transition"
+            style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <h3 class="font-serif text-2xl">Arrival</h3>
+              <span class="text-xs uppercase tracking-[0.25em]" style="color: var(--gold)">15 min</span>
+            </div>
+            <p class="mt-3 text-sm leading-relaxed opacity-80">Doors open at 3:00 PM</p>
+            <div class="mt-6 overflow-hidden rounded-2xl border" style="border-color: var(--hairline)">
+              <div class="h-28 bg-gradient-to-br from-black/5 to-black/0 dark:from-white/10 dark:to-white/0"></div>
+            </div>
+            <div class="mt-4 max-h-0 overflow-hidden text-sm leading-relaxed opacity-80 transition-all duration-300 group-hover:max-h-40">
+              Please arrive early for a smooth seating flow and a calm start.
+            </div>
+          </article>
+
+          <article
+            class="group rounded-3xl border p-6 transition"
+            style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <h3 class="font-serif text-2xl">Notes</h3>
+              <span class="text-xs uppercase tracking-[0.25em]" style="color: var(--gold)">Info</span>
+            </div>
+            <p class="mt-3 text-sm leading-relaxed opacity-80">Keep it minimal, keep it elegant.</p>
+            <div class="mt-6 overflow-hidden rounded-2xl border" style="border-color: var(--hairline)">
+              <div class="h-28 bg-gradient-to-br from-black/5 to-black/0 dark:from-white/10 dark:to-white/0"></div>
+            </div>
+            <div class="mt-4 max-h-0 overflow-hidden text-sm leading-relaxed opacity-80 transition-all duration-300 group-hover:max-h-40">
+              Unplugged ceremony preferred. Please keep phones silent during vows.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="program" class="section mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div class="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">Program</h2>
+            <p class="mt-4 text-sm uppercase tracking-[0.25em] opacity-70">A clean flow</p>
+          </div>
+          <div class="max-w-xl text-sm leading-relaxed opacity-80">
+            Update times below to match your schedule.
+          </div>
+        </div>
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-3">
+          <article class="group rounded-3xl border p-6" style="border-color: var(--hairline)">
+            <div class="text-xs uppercase tracking-[0.25em] opacity-70">03:00 PM</div>
+            <h3 class="mt-3 font-serif text-2xl">Guests Arrive</h3>
+            <div class="mt-4 max-h-0 overflow-hidden text-sm leading-relaxed opacity-80 transition-all duration-300 group-hover:max-h-40">
+              Welcome drinks, seating, and a slow settle into the moment.
+            </div>
+          </article>
+          <article class="group rounded-3xl border p-6" style="border-color: var(--hairline)">
+            <div class="text-xs uppercase tracking-[0.25em] opacity-70">03:30 PM</div>
+            <h3 class="mt-3 font-serif text-2xl">Ceremony</h3>
+            <div class="mt-4 max-h-0 overflow-hidden text-sm leading-relaxed opacity-80 transition-all duration-300 group-hover:max-h-40">
+              Vows, rings, and the chapter officially begins.
+            </div>
+          </article>
+          <article class="group rounded-3xl border p-6" style="border-color: var(--hairline)">
+            <div class="text-xs uppercase tracking-[0.25em] opacity-70">05:00 PM</div>
+            <h3 class="mt-3 font-serif text-2xl">Reception</h3>
+            <div class="mt-4 max-h-0 overflow-hidden text-sm leading-relaxed opacity-80 transition-all duration-300 group-hover:max-h-40">
+              Dinner, speeches, and a dance floor with an editorial edge.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="gallery" class="section mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div class="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">Gallery</h2>
+            <p class="mt-4 text-sm uppercase tracking-[0.25em] opacity-70">Pre-wedding frames</p>
+          </div>
+          <div class="max-w-xl text-sm leading-relaxed opacity-80">
+            Click any image to open the lightbox.
+          </div>
+        </div>
+
+        <div class="mt-10 masonry" id="galleryGrid" aria-label="Gallery grid"></div>
+      </section>
+
+      <footer class="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <div class="border-t pt-10" style="border-color: var(--hairline)">
+          <div class="grid gap-8 lg:grid-cols-12">
+            <div class="lg:col-span-7">
+              <div class="font-serif text-3xl">Mariane Joy &amp; Renic</div>
+              <div class="mt-2 text-sm uppercase tracking-[0.25em] opacity-70">Thank you for being part of our story.</div>
+            </div>
+            <div class="lg:col-span-5">
+              <div class="rounded-2xl border p-5" style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)">
+                <div class="text-xs uppercase tracking-[0.25em] opacity-70">Quick Note</div>
+                <p class="mt-3 text-sm leading-relaxed opacity-80">
+                  This is a template. Replace names/date/venue/story and swap gallery URLs with your photos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <div
+      id="lightbox"
+      class="fixed inset-0 z-[100] hidden items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image lightbox"
+    >
+      <div class="absolute inset-0 bg-black/80"></div>
+      <div class="relative w-full max-w-5xl">
+        <button
+          id="lightboxClose"
+          type="button"
+          class="interactive absolute -top-12 right-0 rounded-full border px-4 py-2 text-xs uppercase tracking-[0.25em]"
+          style="border-color: rgba(255,255,255,0.25); color: #fff"
+        >
+          Close
+        </button>
+        <img id="lightboxImg" alt="" class="relative mx-auto max-h-[80vh] w-full rounded-2xl object-contain" />
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var THEME_KEY = 'theme';
+        var themeToggle = document.getElementById('themeToggle');
+        var themeLabel = document.getElementById('themeLabel');
+        var isFile = location && location.protocol === 'file:';
+
+        function getTheme() {
+          try {
+            if (isFile) return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            return localStorage.getItem(THEME_KEY) || (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+          } catch (e) {
+            return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+          }
+        }
+
+        function setTheme(next) {
+          document.documentElement.classList.toggle('dark', next === 'dark');
+          try {
+            if (!isFile) localStorage.setItem(THEME_KEY, next);
+          } catch (e) {}
+          themeLabel.textContent = next === 'dark' ? 'Dark' : 'Light';
+        }
+
+        setTheme(getTheme());
+
+        themeToggle.addEventListener('click', function () {
+          var current = getTheme();
+          setTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        var mobileBtn = document.getElementById('mobileMenuBtn');
+        var mobileMenu = document.getElementById('mobileMenu');
+        mobileBtn.addEventListener('click', function () {
+          var isOpen = mobileBtn.getAttribute('aria-expanded') === 'true';
+          mobileBtn.setAttribute('aria-expanded', String(!isOpen));
+          mobileMenu.classList.toggle('hidden', isOpen);
+        });
+
+        mobileMenu.addEventListener('click', function (e) {
+          var a = e.target.closest('a');
+          if (!a) return;
+          mobileBtn.setAttribute('aria-expanded', 'false');
+          mobileMenu.classList.add('hidden');
+        });
+
+        var nav = document.getElementById('nav');
+        function updateNav() {
+          nav.classList.toggle('nav-solid', window.scrollY > 12);
+        }
+        updateNav();
+        window.addEventListener('scroll', updateNav, { passive: true });
+
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest('a[href^="#"]');
+          if (!a) return;
+          var href = a.getAttribute('href');
+          if (!href || href.length < 2) return;
+          var target = document.querySelector(href);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          try {
+            if (!isFile) history.pushState(null, '', href);
+          } catch (err) {}
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        var cursor = document.getElementById('cursor');
+        if (!cursor) return;
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var x = window.innerWidth / 2;
+        var y = window.innerHeight / 2;
+        var tx = x;
+        var ty = y;
+        var rafId = null;
+
+        function loop() {
+          x += (tx - x) * 0.18;
+          y += (ty - y) * 0.18;
+          cursor.style.transform = 'translate(' + x + 'px,' + y + 'px) translate(-50%,-50%)';
+          rafId = requestAnimationFrame(loop);
+        }
+
+        function onMove(e) {
+          tx = e.clientX;
+          ty = e.clientY;
+          cursor.classList.add('is-active');
+          if (!rafId) rafId = requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('mousemove', onMove, { passive: true });
+
+        document.addEventListener('mouseover', function (e) {
+          var interactive = e.target.closest('.interactive, button, a, [role="button"], img');
+          cursor.classList.toggle('is-hover', Boolean(interactive));
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        var WEDDING_DATE_ISO = '2026-12-14T15:30:00+08:00';
+        var target = new Date(WEDDING_DATE_ISO).getTime();
+
+        var daysEl = document.getElementById('cdDays');
+        var hoursEl = document.getElementById('cdHours');
+        var minsEl = document.getElementById('cdMins');
+        var secsEl = document.getElementById('cdSecs');
+
+        function pad2(n) {
+          return String(n).padStart(2, '0');
+        }
+
+        function tick() {
+          var now = Date.now();
+          var diff = Math.max(0, target - now);
+          var sec = Math.floor(diff / 1000);
+
+          var days = Math.floor(sec / 86400);
+          sec -= days * 86400;
+          var hours = Math.floor(sec / 3600);
+          sec -= hours * 3600;
+          var mins = Math.floor(sec / 60);
+          sec -= mins * 60;
+
+          daysEl.textContent = String(days);
+          hoursEl.textContent = pad2(hours);
+          minsEl.textContent = pad2(mins);
+          secsEl.textContent = pad2(sec);
+        }
+
+        tick();
+        setInterval(tick, 1000);
+      })();
+    </script>
+
+    <script>
+      (function () {
+        var images = [
+          'https://picsum.photos/seed/lore-1/900/1200',
+          'https://picsum.photos/seed/lore-2/900/700',
+          'https://picsum.photos/seed/lore-3/900/1000',
+          'https://picsum.photos/seed/lore-4/900/800',
+          'https://picsum.photos/seed/lore-5/900/1100',
+          'https://picsum.photos/seed/lore-6/900/750',
+          'https://picsum.photos/seed/lore-7/900/980',
+          'https://picsum.photos/seed/lore-8/900/720',
+        ];
+
+        var grid = document.getElementById('galleryGrid');
+        var lightbox = document.getElementById('lightbox');
+        var lightboxImg = document.getElementById('lightboxImg');
+        var closeBtn = document.getElementById('lightboxClose');
+
+        function open(src) {
+          lightboxImg.src = src;
+          lightbox.classList.remove('hidden');
+          lightbox.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+        }
+
+        function close() {
+          lightbox.classList.add('hidden');
+          lightbox.classList.remove('flex');
+          lightboxImg.src = '';
+          document.body.style.overflow = '';
+        }
+
+        images.forEach(function (src, i) {
+          var item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'masonry-item interactive w-full overflow-hidden rounded-2xl border text-left transition hover:opacity-90';
+          item.style.borderColor = 'var(--hairline)';
+          item.setAttribute('aria-label', 'Open gallery image ' + (i + 1));
+
+          var img = document.createElement('img');
+          img.loading = 'lazy';
+          img.alt = '';
+          img.src = src;
+          img.className = 'w-full rounded-2xl object-cover';
+
+          item.appendChild(img);
+          item.addEventListener('click', function () {
+            open(src);
+          });
+
+          grid.appendChild(item);
+        });
+
+        closeBtn.addEventListener('click', close);
+        lightbox.addEventListener('click', function (e) {
+          if (e.target === lightbox) close();
+          var bg = e.target.closest('div');
+          if (bg && bg.classList.contains('bg-black/80')) close();
+        });
+
+        window.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) close();
+        });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        gsap.registerPlugin(ScrollTrigger, TextPlugin);
+
+        var hero = document.getElementById('heroNames');
+        if (hero) {
+          var text = hero.textContent;
+          hero.textContent = '';
+          var frag = document.createDocumentFragment();
+          for (var i = 0; i < text.length; i++) {
+            var ch = text[i];
+            var span = document.createElement('span');
+            span.textContent = ch;
+            span.style.display = 'inline-block';
+            span.style.whiteSpace = ch === ' ' ? 'pre' : 'normal';
+            frag.appendChild(span);
+          }
+          hero.appendChild(frag);
+
+          gsap.from(hero.children, {
+            y: 18,
+            opacity: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            stagger: 0.03,
+          });
+        }
+
+        gsap.utils.toArray('.section').forEach(function (section) {
+          gsap.from(section, {
+            opacity: 0,
+            y: 24,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 80%',
+            },
+          });
+        });
+
+        gsap.utils.toArray('.timeline-item').forEach(function (item) {
+          gsap.from(item, {
+            opacity: 0,
+            y: 20,
+            duration: 0.7,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: item,
+              start: 'top 85%',
+            },
+          });
+        });
+
+        ScrollTrigger.refresh();
+      })();
+    </script>
+
+    <script>
+      (function () {
+        // DEBUG: Disabled for testing - Reduced motion check
+        // if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var container = document.getElementById('falling-elements');
+        if (!container) {
+          console.error('Falling elements container not found!');
+          return;
+        }
+
+        // Inline SVG icons - veterinary/medical themed
+        var icons = {
+          pill: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>',
+          syringe: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="M10 8 8 10"/><path d="M10 14 4 20"/><path d="M11 21 9 23"/></svg>',
+          stethoscope: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>',
+          heart: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+          activity: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>'
+        };
+
+        var iconNames = Object.keys(icons);
+        var count = 15;
+
+        function rand(min, max) {
+          return Math.random() * (max - min) + min;
+        }
+
+        function makeIcon(name) {
+          var wrap = document.createElement('div');
+          wrap.className = 'falling-icon';
+          wrap.style.left = rand(5, 95) + 'vw';
+          wrap.style.transform = 'translateX(-50%) rotate(' + rand(-15, 15) + 'deg)';
+          wrap.innerHTML = icons[name];
+          return wrap;
+        }
+
+        function fall(el) {
+          gsap.fromTo(el, 
+            { 
+              y: -80, 
+              x: 0,
+              rotation: rand(-10, 10),
+              opacity: 0 
+            },
+            { 
+              y: window.innerHeight + 100, 
+              x: rand(-30, 30),
+              rotation: rand(-20, 20),
+              opacity: 1,
+              duration: rand(18, 32),
+              ease: 'none',
+              onComplete: function() {
+                el.style.left = rand(5, 95) + 'vw';
+                fall(el);
+              }
+            }
+          );
+        }
+
+        for (var i = 0; i < count; i++) {
+          var name = iconNames[Math.floor(Math.random() * iconNames.length)];
+          var el = makeIcon(name);
+          container.appendChild(el);
+          
+          gsap.delayedCall(rand(0, 10), function(element) {
+            return function() { fall(element); };
+          }(el));
+        }
+
+        var active = 0;
+        function setVisible(next) {
+          container.classList.toggle('is-visible', next);
+        }
+
+        function enter() {
+          active += 1;
+          setVisible(active > 0);
+        }
+
+        function leave() {
+          active = Math.max(0, active - 1);
+          setVisible(active > 0);
+        }
+
+        ['#story'].forEach(function (sel) {
+          ScrollTrigger.create({
+            trigger: sel,
+            start: 'top 90%',
+            end: 'bottom 10%',
+            onEnter: enter,
+            onEnterBack: enter,
+            onLeave: leave,
+            onLeaveBack: leave,
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>
