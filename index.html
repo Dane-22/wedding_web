@@ -198,7 +198,8 @@
           <a class="interactive hover:opacity-70 transition" href="#story">Story</a>
           <a class="interactive hover:opacity-70 transition" href="#venue">Venue</a>
           <a class="interactive hover:opacity-70 transition" href="#program">Program</a>
-          <a class="interactive hover:opacity-70 transition" href="#gallery">Gallery</a>
+          <!-- <a class="interactive hover:opacity-70 transition" href="#gallery">Gallery</a> -->
+          <a class="interactive hover:opacity-70 transition" href="#rsvp" style="color: var(--gold)">RSVP</a>
         </div>
 
         <div class="flex items-center gap-3">
@@ -235,7 +236,8 @@
               <a class="interactive hover:opacity-70 transition" href="#story">Story</a>
               <a class="interactive hover:opacity-70 transition" href="#venue">Venue</a>
               <a class="interactive hover:opacity-70 transition" href="#program">Program</a>
-              <a class="interactive hover:opacity-70 transition" href="#gallery">Gallery</a>
+              <!-- <a class="interactive hover:opacity-70 transition" href="#gallery">Gallery</a> -->
+              <a class="interactive hover:opacity-70 transition" href="#rsvp" style="color: var(--gold)">RSVP</a>
             </div>
           </div>
         </div>
@@ -300,14 +302,14 @@
               >
                 View Venue
               </a>
-              <a
+              <!-- <a
                 href="#gallery"
                 class="interactive inline-flex items-center justify-center rounded-full border px-5 py-3 text-xs uppercase tracking-[0.25em] transition hover:opacity-80"
                 style="border-color: var(--hairline)"
               >
                 Preview Gallery
               </a>
-            </div>
+            </div> -->
           </div>
 
           <div class="lg:col-span-5">
@@ -515,7 +517,7 @@
           </article>
         </div>
       </section>
-
+<!-- 
       <section id="gallery" class="section mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <div class="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -528,6 +530,114 @@
         </div>
 
         <div class="mt-10 masonry" id="galleryGrid" aria-label="Gallery grid"></div>
+      </section> -->
+
+      <section id="rsvp" class="section mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
+        <div class="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">RSVP</h2>
+            <p class="mt-4 text-sm uppercase tracking-[0.25em] opacity-70">Let us know you're coming</p>
+          </div>
+          <div class="max-w-xl text-sm leading-relaxed opacity-80">
+            Please fill out the form below to confirm your attendance.
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <form id="rsvpForm" class="mx-auto max-w-2xl rounded-3xl border p-6 sm:p-8" style="border-color: var(--hairline); background: var(--card); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur)">
+            <div class="grid gap-6">
+              <div>
+                <label for="fullName" class="block text-xs uppercase tracking-[0.25em] opacity-70">Full Name</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  required
+                  placeholder="Your full name"
+                  class="mt-2 w-full rounded-xl border px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
+                  style="border-color: var(--hairline); background: var(--paper); color: var(--ink)"
+                />
+              </div>
+
+              <div>
+                <label for="email" class="block text-xs uppercase tracking-[0.25em] opacity-70">Email Address</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="you@email.com"
+                  class="mt-2 w-full rounded-xl border px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
+                  style="border-color: var(--hairline); background: var(--paper); color: var(--ink)"
+                />
+              </div>
+
+              <div>
+                <label for="contactNumber" class="block text-xs uppercase tracking-[0.25em] opacity-70">Contact Number</label>
+                <input
+                  type="tel"
+                  id="contactNumber"
+                  name="contactNumber"
+                  required
+                  placeholder="09xxxxxxxxx"
+                  pattern="09[0-9]{9}"
+                  title="Philippine mobile format: 09xxxxxxxxx"
+                  class="mt-2 w-full rounded-xl border px-4 py-3 text-sm transition focus:outline-none focus:ring-2"
+                  style="border-color: var(--hairline); background: var(--paper); color: var(--ink)"
+                />
+                <p class="mt-1 text-xs opacity-60">Philippine mobile format: 09xxxxxxxxx</p>
+              </div>
+
+              <div>
+                <label class="block text-xs uppercase tracking-[0.25em] opacity-70">Attendance</label>
+                <div class="mt-3 flex gap-4">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="attendance"
+                      value="yes"
+                      required
+                      class="h-4 w-4 accent-[var(--gold)]"
+                    />
+                    <span class="text-sm">Yes, Attending</span>
+                  </label>
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="attendance"
+                      value="no"
+                      class="h-4 w-4 accent-[var(--gold)]"
+                    />
+                    <span class="text-sm">Unable to Attend</span>
+                  </label>
+                </div>
+              </div>
+
+              <div>
+                <label for="message" class="block text-xs uppercase tracking-[0.25em] opacity-70">Message for the Couple</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="4"
+                  placeholder="Write your message here..."
+                  class="mt-2 w-full rounded-xl border px-4 py-3 text-sm transition focus:outline-none focus:ring-2 resize-none"
+                  style="border-color: var(--hairline); background: var(--paper); color: var(--ink)"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                id="submitBtn"
+                class="interactive inline-flex items-center justify-center rounded-full px-6 py-3 text-xs uppercase tracking-[0.25em] transition hover:opacity-90"
+                style="background: var(--ink); color: var(--paper)"
+              >
+                <span id="submitBtnText">Submit RSVP</span>
+              </button>
+
+              <div id="formMessage" class="hidden text-center text-sm"></div>
+            </div>
+          </form>
+        </div>
       </section>
 
       <footer class="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
@@ -725,7 +835,7 @@
           'https://picsum.photos/seed/lore-8/900/720',
         ];
 
-        var grid = document.getElementById('galleryGrid');
+        // var grid = document.getElementById('galleryGrid');
         var lightbox = document.getElementById('lightbox');
         var lightboxImg = document.getElementById('lightboxImg');
         var closeBtn = document.getElementById('lightboxClose');
@@ -933,6 +1043,73 @@
             onLeaveBack: leave,
           });
         });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        var form = document.getElementById('rsvpForm');
+        var submitBtn = document.getElementById('submitBtn');
+        var submitBtnText = document.getElementById('submitBtnText');
+        var formMessage = document.getElementById('formMessage');
+
+        if (!form) return;
+
+        // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+        var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyWFUbxZ3ZCXROyi8AyoXcaqiAj7M2BdyhpC5BElcRWdcVmEbVtOb2itE2NT6SxpyatAg/exec';
+
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+            showMessage('Please configure your Google Apps Script URL in the code.', 'error');
+            return;
+          }
+
+          var formData = new FormData(form);
+          var data = {
+            fullName: formData.get('fullName'),
+            email: formData.get('email'),
+            contactNumber: formData.get('contactNumber'),
+            attendance: formData.get('attendance'),
+            message: formData.get('message') || '',
+            timestamp: new Date().toISOString()
+          };
+
+          submitBtn.disabled = true;
+          submitBtnText.textContent = 'Submitting...';
+
+          fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          })
+          .then(function () {
+            showMessage('Thank you for your RSVP! We have received your response.', 'success');
+            form.reset();
+          })
+          .catch(function (error) {
+            console.error('Error:', error);
+            showMessage('There was an error submitting your RSVP. Please try again.', 'error');
+          })
+          .finally(function () {
+            submitBtn.disabled = false;
+            submitBtnText.textContent = 'Submit RSVP';
+          });
+        });
+
+        function showMessage(text, type) {
+          formMessage.textContent = text;
+          formMessage.classList.remove('hidden');
+          formMessage.style.color = type === 'success' ? 'var(--gold)' : '#ef4444';
+          
+          setTimeout(function () {
+            formMessage.classList.add('hidden');
+          }, 5000);
+        }
       })();
     </script>
   </body>
